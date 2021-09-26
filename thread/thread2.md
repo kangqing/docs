@@ -46,6 +46,41 @@ java.lang.Class 的父类也是 Object,在每个类型中也内置了一把锁�
 
 多个静态同步方法之间互斥，静态同步方法与静态不同步方法不互斥。
 
+### synchronized 同步代码块
+synchronized 同步方法，就是线程在调用方法前获取对象的监视器锁，方法执行完毕后释放对象监视器锁。
+方法同步的关键是`为了保护资源`，如果 synchronized 方法中没有使用共享资源，就无须使用 synchronized 同步这个方法。
+在同步方法中，使用共享资源的只是部分代码。为了提高并发性能，一般没必要在整个方法的运行期间都持有监视器锁。
+使用`同步代码块`模式，可以在方法中真正需要使用共享资源时再获取监视器锁，共享资源访问结束马上释放锁，这样就节省了对象监视器锁占用的时间，可以有效的提高并发性能。
 
+### 锁当前对象
+synchronized (this) {} 就是获取`当前对象的监视器锁`，synchronized 同步方法，本质就是隐式的使用了 synchronized (this)
+
+### 锁其他对象
+监视器锁内置于 Object 底层代码，所有的对象的根都是 Object, 因此所有对象都有自己的监视器锁。
+
+使用其他 Object 对象的监视器锁，比使用自身对象的监视器锁代码更加灵活。
+
+### 锁 Class
+不仅每个对象内置了监视器锁，每个数据类型 Class 也内置了监视器锁。因此使用内置于 Class中的锁也可以实现同步效果。
+```java
+public Class Clock {
+    public void time() {
+        synchronized(Object.class) {
+            ...
+        }
+    }
+}
+```
+<font color='red'>注意：</font>
+synchronized(Object.class) 使用的是`类锁`，不是对象锁。但是`轻易不要使用 Object.class 的类锁`,因为在整个项目中，如果其他业务模块也是用了 Object.class的类锁，这样就会产生并发冲突。合理的使用类锁的基本原则：`尽量使用当前类的监视器锁`，例如可以优化如下；
+```java
+public Class Clock {
+    public void time() {
+        synchronized(Clock.class) {
+            ...
+        }
+    }
+}
+```
 
 
