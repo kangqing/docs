@@ -1,5 +1,7 @@
 # MacOS idea 快捷键指南
 
+python -m http.server 3000
+
 ## 查找
 ```bash
 # 查找类
