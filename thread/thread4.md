@@ -350,6 +350,168 @@ ForkJoinTask 实现了 Future 接口，他是一个线程实体，比普通线�
 
 ForkJoinTask 有两个子类：`RecursiveAction` 和 `RecursiveTask` 他们的区别是前者没有返回值，后者有返回值。子类重写 `compute()`方法，即可调用 fork() 与 join() 方法，进行异步任务分解与合并。
 
-## 线程工程与线程组
+## 线程工厂与线程组
+创建线程除了使用 new Thread()、线程池等之外，还可以使用线程工厂，线程工厂能够能加灵活的创建线程，线程池的底层就是使用线程工厂创建线程池的。
+
+`线程组` 代表了一组线程，每个线程组中还可能包括其他线程组，线程组会形成一棵树，除了跟节点线程组之外，每个线程组都会有一个父线程组。默认情况下，跟节点的线程组的名字是`system`，而当前程序的主线程的线程组的名字是`main`,可以使用下面代码测试当前线程所有父线程组的名字。
+
+```java
+    /**
+     * 获取当前线程所有的父线程组的名字
+     */
+    @Test
+    void currentParentGroup() {
+        ThreadGroup current = Thread.currentThread().getThreadGroup();
+        System.out.println("当前线程组是 = " + current);
+        for (;;) {
+            ThreadGroup parent = current.getParent();
+            if (parent != null) {
+                System.out.println(current + "线程组的父线程组是 = " + parent);
+                current = parent;
+            } else {
+                break;
+            }
+        }
+    }
+
+// 输出结果：
+当前线程组是 = java.lang.ThreadGroup[name=main,maxpri=10]
+java.lang.ThreadGroup[name=main,maxpri=10]线程组的父线程组是 = java.lang.ThreadGroup[name=system,maxpri=10]
+```
+### 1. 线程与线程组
+线程 Thread 和线程组 ThreadGroup 的关系密切，Thread 类中所有的构造函数，都要调用 init() 方法初始化方法，init() 的第一个参数就是线程组，如果线程组的参数为空，会默认使用当前线程的线程组对象(当前线程就是创建者线程)，即新建的线程默认使用创建者的线程组。
+
+### 2. 线程工厂接口
+根据需要创建新的线程对象时，使用线程工厂可以避免 new Thread() 的硬编码，使应用程序能够使用特殊的线程子类，线程优先级等，这样程序会更加灵活。
+
+### 3. 默认线程工厂实现
+在 Executors 工具类中，提供了默认的线程工厂的实现方法：
+```java
+public static ThreadFactory defaultThreadFactory() {
+        return new DefaultThreadFactory();
+    }
+
+/**
+    * The default thread factory.
+    */
+private static class DefaultThreadFactory implements ThreadFactory {
+    private static final AtomicInteger poolNumber = new AtomicInteger(1);
+    private final ThreadGroup group;
+    private final AtomicInteger threadNumber = new AtomicInteger(1);
+    private final String namePrefix;
+
+    DefaultThreadFactory() {
+        SecurityManager s = System.getSecurityManager();
+        group = (s != null) ? s.getThreadGroup() :
+                                Thread.currentThread().getThreadGroup();
+        namePrefix = "pool-" +
+                        poolNumber.getAndIncrement() +
+                        "-thread-";
+    }
+
+    public Thread newThread(Runnable r) {
+        Thread t = new Thread(group, r,
+                                namePrefix + threadNumber.getAndIncrement(),
+                                0);
+        if (t.isDaemon())
+            t.setDaemon(false);
+        if (t.getPriority() != Thread.NORM_PRIORITY)
+            t.setPriority(Thread.NORM_PRIORITY);
+        return t;
+    }
+}
+```
+### 4. 线程池与线程工厂
+创建线程池 ThreadPoolExecutor 的时候需要使用线程工厂 ThreadFactory. 如果你没有指定线程工厂，则会默认使用 Executors 创建默认的defaultThreadFactory() 对象。
+
+线程池 ThreadPoolExecutor 中的所有线程，都是在 addWorker() 方法中，调用线程工厂创建的，由于操作系统或者用户策略对线程数量的限制，在创建新的线程的时候可能会出现失败的现象，创建线程需要分配本地栈空间，应保证内存空间充足，特殊情况下回出现内存溢出（OOM）错误。
 
 ## 线程池异常处理
+
+### 1. UncaughtExceptionHandler 接口统一处理异常
+```java
+    /**
+     * 统一处理线程池异常
+     */
+    @Test
+    void uncaughtExceptionHandlers() {
+        ExecutorService pool = Executors.newCachedThreadPool(new MyThreadFactory());
+        for (int i = 0; i < 20; i++) {
+            pool.execute(() -> {
+                int ran = (int) (Math.random() * 10);
+                if (ran > 8) {
+                    throw new RuntimeException("test..." + ran);
+                }
+                System.out.println(Thread.currentThread().getId() + " running ..." + ran);
+            });
+        }
+        pool.shutdown();
+    }
+
+/**
+ * 自定义线程工厂
+ * @author kangqing
+ * @since 2021/10/30 12:56
+ */
+public class MyThreadFactory implements ThreadFactory {
+    @Override
+    public Thread newThread(Runnable r) {
+        Thread t = new Thread(r);
+        t.setUncaughtExceptionHandler(new MyUncaughtExceptionHandler());
+        return t;
+    }
+}
+
+/**
+ * 统一线程池异常处理器
+ */
+@Slf4j
+class MyUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
+
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        log.error(e.getMessage(), e);
+    }
+}
+
+```
+
+### Future 处理异常
+使用 Callable 和 Future 组合，可以在 Future 返回结果中处理异常信息。 Future 中存储了任务的运行结果，还可以取消任务以及检查任务是否发生了异常，Future的规约中暗示了任务的生命周期是单向的，不能后退，就像 ExecutorService 中的生命周期一样，一旦任务完成，它就永远停留在完成状态上。
+
+任务的执行状态决定了 Future 的 get() 方法的行为，如果任务已经完成，get() 会立即返回结果或者抛出异常，如果任务没有完成，get() 会一直阻塞知道完成任务，如果任务抛出了异常，get() 方法会将该异常封装为 ExceptionException 异常，然后重新抛出。可以用 getCause() 方法获取异常信息。
+
+```java
+    /**
+     * Future 异常处理
+     */
+    @Test
+    void futureException() {
+        ExecutorService pool = Executors.newCachedThreadPool();
+        for (int i = 0; i < 20; i++) {
+            Future<Integer> future = pool.submit(new MyTaskCall());
+            try {
+                Integer result = future.get();
+                System.out.println(result);
+            } catch (ExecutionException e) {
+                log.error(e.getMessage(), e.getCause());
+            } catch (Exception e) {
+                System.out.println("网络异常，请检查...");
+            }
+        }
+        pool.shutdown();
+    }
+
+class MyTaskCall implements Callable<Integer> {
+
+    @Override
+    public Integer call() throws Exception {
+        int ran = (int) (Math.random() * 10);
+        if (ran > 8) {
+            throw new RuntimeException("test..." + ran);
+        }
+        System.out.println(Thread.currentThread().getId() + " running..." + ran);
+        return ran;
+    }
+}
+```
