@@ -152,6 +152,7 @@ public void unlock(){
 2. 获取锁的时候还要设置一个获取锁的超时时间，若超过这个时间则放弃获取锁。
 
 ### 样例代码
+### 可以直接使用封装好的 Redisson 来使用分布式锁，比自己写代码好得多)
 ```java
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
@@ -331,3 +332,17 @@ zookeeper 的数据存储就像一颗树，这棵树由节点组成，这种节�
 
 ### 推荐
 推荐一个Apache的开源库Curator（https://github.com/apache/curator/），它是一个ZooKeeper客户端，Curator提供的InterProcessMutex是分布式锁的实现，acquire方法用于获取锁，release方法用于释放锁。
+
+必须不能出现任何数据不一致的项目使用ZooKeeper 实现分布式锁，稍慢。
+
+### 推荐
+使用 Redisson 实现分布式锁、读写锁等，允许极少量数据不一致使用redis实现分布式锁，速度快。
+
+普通分布式锁可以解决超卖问题，提升100倍性能可以考虑使用分段锁，把库存分段，扣减库存分段扣减。
+
+读多写少的情况下，高并发使用读写锁会更快，能解决数据库缓存双写不一致问题，允许多个线程同时读数据一个线程能够写数据。
+StampedLock是JDK1.8新加的一种在读取共享变量的过程中，允许后面的一个线程获取写锁对共享变量进行写操作，使用乐观读避免数据不一致的问题，并且在读多写少的高并发环境下，比ReadWriteLock更快的一种锁。
+
+
+
+
