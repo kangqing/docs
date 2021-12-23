@@ -18,3 +18,7 @@
 
     - [缓存相关](distributed/dss1)
     - [分布式](distributed/dss2)
+
+- [Redis知识点](redis/README)
+
+    - [基础命令](redis/command)
