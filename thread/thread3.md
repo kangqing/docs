@@ -230,3 +230,111 @@ class Bank {
     }
 ```
 
+## Semaphore
+
+信号量，此类所提供的功能完全就是 synchronized 的升级版，但是它提供的功能更加强大与方便，主要作用是控制线程并发的数量。单纯使用 synchronized 是做不到的。
+
+主要通过创建一个 Semaphore 实例传入一个整数参数来实现控制并发数量，代表同一时间内，最多允许多少个线程同时执行 acquire() 和release() 之间的代码；默认非公平的，也可以通过传入 boolean 类型参数限制是否公平。内部主要方法 acquire() 获取许可，release() 释放许可。
+
+所谓信号量的公平性，就是获得许可的顺序和线程启动的顺序有关，但是不代表 100% 公平，仅仅是在概率上能做到保证，而非公平的信号量就是与线程启动的顺序彻底无关了。
+
+**注意：**当信号量传入的参数大于 1 的时候，该类并不能保证线程的安全性，因为还是可能会出现多个线程同时访问公共资源的情况。
+
+```java
+
+/**
+ * 信号量
+ * 同一时间最多允许信号量定义个数的线程访问共享资源，超过一个线程时是线程不安全的。
+ * semaphore.acquire(); 获取许可
+ * semaphore.release(); 释放许可
+ * @author kangqing
+ * @since 2022/1/17 08:48
+ */
+public class SemaphoreTest {
+    // 默认非公平，这里指定公平的
+    private final static Semaphore semaphore = new Semaphore(3, true);
+
+    public static void main(String[] args) {
+        ExecutorService service = Executors.newCachedThreadPool();
+        for (int i = 0; i < 10; i++) {
+            final long c = i;
+            service.execute(() -> {
+                try {
+                    semaphore.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("获取许可acquire---" + c);
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println("释放许可---release" + c);
+                semaphore.release();
+            });
+        }
+
+        service.shutdown();
+    }
+}
+```
+
+## Exchanger
+
+功能：可以使两个线程之间传输数据，学习要点就是 exchange() 方法。
+
+```java
+/**
+ * 功能：可以使两个线程之间传输数据
+ * 主要是 exchange() 方法
+ * @author kangqing
+ * @since 2022/1/17 10:37
+ */
+public class ExchangerTest {
+    public static void main(String[] args) {
+        Exchanger<String> exchanger = new Exchanger<>();
+        final Thread1 thread1 = new Thread1(exchanger);
+        final Thread2 thread2 = new Thread2(exchanger);
+        thread1.start();
+        thread2.start();
+    }
+}
+
+class Thread1 extends Thread {
+    private final Exchanger<String> exchanger;
+
+    Thread1(Exchanger<String> exchanger) {
+        this.exchanger = exchanger;
+    }
+
+    @Override
+    public void run() {
+        try {
+            System.out.println("得到另一个线程的值" + exchanger.exchange("A"));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Thread2 extends Thread {
+    private final Exchanger<String> exchanger;
+
+    Thread2(Exchanger<String> exchanger) {
+        this.exchanger = exchanger;
+    }
+
+    @Override
+    public void run() {
+        try {
+            System.out.println("---" + exchanger.exchange("B"));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+

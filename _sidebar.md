@@ -8,6 +8,8 @@
     - [多线程通信](thread/thread3)
     - [线程池入门](thread/thread4)
     - [线程池与锁](thread/thread5)
+    - [CountDownLatch](thread/CountDownLatch)
+    - [CyclicBarrier](thread/CyclicBarrier)
 
 - [Spring知识点](spring/README)
 
