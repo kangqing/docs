@@ -220,6 +220,10 @@ execute() 没有返回值
 调用 ExecutorService 接口的 shutdown() 方法，有序关闭线程池，先前被提交的任务仍会执行，但是不会再接收新的任务
 
 shutdownNow() 方法会尝试停止所有任务，包括正在执行的任务和等待执行的任务，这个方法会返回未执行的任务列表。
+如果在 Runnable 中使用 if(Thread.currentThread().isInterrupted() == true) 判断了当前线程的中断状态，则会抛出异常 InterruptedException, 未执行的线程不会再执行，直接返回未执行的线程；如果 Runnable 中没有判断中断状态，则会把线程池中正在运行的线程执行完毕，未执行的不再执行，直接返回。
+
+## isTerminating 和 isTerminated
+方法 shutdown() 和 shutdownNow() 的功能是发出一个关门的指令，方法 isShutdown() 是判断这个关闭大门的指令发出或者未发出，而 isTerminating() 代表大门是否正在关闭，isTerminated() 代表大门是否已经关闭。
 
 ## Executors 工具箱
 
@@ -512,6 +516,47 @@ class MyTaskCall implements Callable<Integer> {
         }
         System.out.println(Thread.currentThread().getId() + " running..." + ran);
         return ran;
+    }
+}
+```
+
+## 自定义处理任务被拒绝时的行为
+
+set/getRejectedExceptionHandler() 可以自定义处理任务被拒绝时候的策略，默认策略是抛异常处理。
+
+```java
+/**
+ * @author kangqing
+ * @since 2022/1/20 09:34
+ */
+public class Test1_20 {
+    public static void main(String[] args) {
+        MyRunnable runnable1 = new MyRunnable();
+        MyRunnable runnable2 = new MyRunnable();
+        MyRunnable runnable3 = new MyRunnable();
+        MyRunnable runnable4 = new MyRunnable();
+
+        // 自定义线程池,使用同步队列，同步队列中没有任何容量，所以超过2和核心线程会创建一个非核心线程，再多就会抛异常
+        final ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(2, 3, 10,
+                TimeUnit.SECONDS, new SynchronousQueue<>());
+        // 设置自定义拒绝策略
+        poolExecutor.setRejectedExecutionHandler(new MyRejectedExceptionHandler());
+
+        poolExecutor.execute(runnable1);
+        poolExecutor.execute(runnable2);
+        poolExecutor.execute(runnable3);
+        poolExecutor.execute(runnable4);
+    }
+}
+
+/**
+ * 创建自定义拒绝处理任务的策略
+ */
+class MyRejectedExceptionHandler implements RejectedExecutionHandler {
+
+    @Override
+    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+        System.out.println("任务数超过最大线程数，被拒绝执行");
     }
 }
 ```
