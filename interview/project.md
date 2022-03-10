@@ -1,8 +1,8 @@
 ## 自我介绍
-您好，我叫杨旭，2017年毕业于天津理工大学软件工程专业，毕业后到现在一直从事Java后端开发的工作，平时用到的技术栈主要有 Spring、SpringBoot、Mybatis,MySql,redis等等，熟练使用集合框架、多线程开发，本人有较强的自学能力，能够较快适应各种工作环境，善于与其他人沟通共同推进项目进程。
+您好，我叫杨旭，2017年毕业于天津理工大学软件工程专业，毕业后到现在一直从事Java后端开发的工作，平时用到的技术栈主要有 Spring、SpringBoot、Mybatis,MySql,redis等等，也对docker容器和jenkins的使用有一定了解。熟练使用集合框架、多线程开发，本人有较强的自学能力，能够较快适应各种工作环境，善于与其他人沟通共同推进项目进程。
 
 ## 说一下你的项目
-上家公司做的是一个银行内部使用的一个提工单、写文章、写想法、绩效考核、兴趣部落的这么一个系统，主要使用的技术是 SpringBoot、ORM框架用的Mybatis、数据库使用的是MySQL、Redis用来做缓存、项目部署使用的是 Jenkins、版本控制用的git。
+上家公司做的是一个银行内部使用的一个提工单、写文章、写想法、绩效考核、兴趣部落的这么一个系统，前后端分离，前端使用的是 react,后端主要使用的技术是 SpringBoot、ORM框架用的Mybatis、数据库使用的是MySQL、Redis用来做缓存、项目部署使用的是 Jenkins、版本控制用的git。
 
 ## 项目中的亮点
 
@@ -25,7 +25,7 @@ I hope I can make a good performance today.
 
 Now, I will introduce myself.
 
-My name is Yangxu.I am 28 years old, 
+My name is XX.I am 28 years old, 
 
 I graduated from  Tianjin University of Technology. 
 
@@ -35,7 +35,7 @@ Becoming an Java Development Engineer is my dream .
 
 I long for the chance to use my talents.
 
-I think Ericsson is an international company, and I can get more in such a working environment.
+I think XX is an international company, and I can get more in such a working environment.
  
 That is the reason that I come here for the interview.
 
