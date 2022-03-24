@@ -121,6 +121,15 @@ return 301 https://$host$request_uri;
 
 网站：digitalocean.com/community/tools/nginx
 
+## Mac文件上传linux,linux远程文件拉到mac本地
+```bash
+# mac本地--> linux远程
+scp ./路径本地文件 root@ip:/远程路径
+# linux远程 --> mac本地
+scp root@ip:/远程路径文件 /本地路径
+
+```
+
 ## 配置 https 报错
 
 提示 Nginx 缺少 http_ssl_module 模块。如下：
