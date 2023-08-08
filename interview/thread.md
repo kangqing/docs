@@ -68,11 +68,6 @@ synchronized 的底层原理是基于 jvm 层面的，线程试图获取锁也�
     
 6. `TERMINATED`状态：完结状态，当线程完成 run() 方法中的任务时，或者由于某些未知异常强制中断时，线程到达完结状态
 
-## sleep() 和 wait() 的区别
-- 两者最主要的区别在于：**sleep() 方法没有释放锁，而 wait() 方法释放了锁** 。
-- 两者都可以暂停线程的执行。
-- wait() 通常被用于线程间交互/通信，sleep()通常被用于暂停执行。
-- wait() 方法被调用后，线程不会自动苏醒，需要别的线程调用同一个对象上的 notify()或者 notifyAll() 方法。sleep()方法执行完成后，线程会自动苏醒。或者可以使用 wait(long timeout) 超时后线程会自动苏醒。
 
 ## ReentranLock 的理解，和 synchronized 有什么区别？
 1. synchronized 是基于 jvm 层面的锁，是java的关键字，ReentrantLock 是JDK提供的API层面的锁。
@@ -198,12 +193,37 @@ AtomicReferenceFieldUpdater：原子更新引用类型字段的更新器
 
 
 ## AQS了解吗？AbstractQueuedSynchronizer
-AQS 是一个用来构建锁和同步器的框架，使用 AQS 能简单且高效地构造出应用广泛的大量的同步器，比如我们提到的 ReentrantLock，Semaphore,CountDownLatch等。
+AQS 是一个用来构建锁和同步器的抽象类，使用 AQS 能简单且高效地构造出应用广泛的大量的同步器，比如我们提到的 ReentrantLock，Semaphore,CountDownLatch,ThreadPoolExecutor等。
 
-AQS 核心思想是，如果被请求的共享资源空闲，则将当前请求资源的线程设置为有效的工作线程，并且将共享资源设置为锁定状态。如果被请求的共享资源被占用，那么就将暂时获取不到锁的线程加入到队列中。
-CLH(Craig,Landin,and Hagersten)队列是一个虚拟的双向队列（虚拟的双向队列即不存在队列实例，仅存在结点之间的关联关系）。AQS 是将每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点（Node）来实现锁的分配。
+1. AQS中提供了一个由 volatile 修饰，并且采用 CAS 方式修改 int 类型的 state 变量。
+2. AQS 中维护了一个双向链表，并且每一个节点都是 Node 对象；addWaiter方法的作用：
+```java
+/**
+ * 将没有获取到锁资源的线程封装成 Node 放到队列中排队
+ */
+private Node addWaiter(Node mode) {
+        Node node = new Node(mode);
 
-AQS 使用一个 int 成员变量state来表示同步状态，通过内置的 FIFO 队列来完成获取资源线程的排队工作。AQS 使用 CAS 对该同步状态进行原子操作实现对其值的修改。
+        for (;;) {
+            Node oldTail = tail;
+            if (oldTail != null) {
+                node.setPrevRelaxed(oldTail);
+                if (compareAndSetTail(oldTail, node)) {
+                    oldTail.next = node;
+                    return node;
+                }
+            } else {
+                initializeSyncQueue();
+            }
+        }
+    }
+```
+3. ConditionObject 双向链表
+当执行 Condition.await() 方法的时候，线程会挂起，会把挂起的线程放进 ConiditionObject 的队列中排队等唤醒；唤醒后才会移动到 AQS 的双向链表中，才有机会获取 CPU 资源；
+synchronized 中执行 wait() 方法会把挂起的线程放到 waitset 的等待池中，被唤醒后放到 EntryList的双向链表中；
+
+## AQS 唤醒节点时，为什么从后往前找？
+因为加入链表的时候都是先改变新加入Node的前一个节点指向链表，然后链表tail指向Node,这时候链表之前尾部节点还指向 Null,这时候如果从前往后找，很大概率造成丢失节点，不能被唤醒。
 
 ## AQS对资源的共享方式
 

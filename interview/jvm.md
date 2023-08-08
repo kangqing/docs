@@ -133,4 +133,24 @@ jvisualvm：JDK 自带的全能分析工具，可以分析：内存快照、线�
 
 
 
+## JVM实践
 
+![截屏2022-09-29 21.06.03](https://yunqing-img.oss-cn-beijing.aliyuncs.com/hexo/article/202303/%E6%88%AA%E5%B1%8F2022-09-29%2021.06.03.png)
+
+![截屏2022-09-29 21.10.13](https://yunqing-img.oss-cn-beijing.aliyuncs.com/hexo/article/202303/%E6%88%AA%E5%B1%8F2022-09-29%2021.10.13.png)
+
+![截屏2022-09-29 21.11.40](https://yunqing-img.oss-cn-beijing.aliyuncs.com/hexo/article/202303/%E6%88%AA%E5%B1%8F2022-09-29%2021.11.40.png)
+
+![截屏2022-09-29 21.13.22](https://yunqing-img.oss-cn-beijing.aliyuncs.com/hexo/article/202303/%E6%88%AA%E5%B1%8F2022-09-29%2021.13.22.png)
+
+![截屏2022-09-29 21.15.48](https://yunqing-img.oss-cn-beijing.aliyuncs.com/hexo/article/202303/%E6%88%AA%E5%B1%8F2022-09-29%2021.15.48.png)
+
+![截屏2022-09-29 21.17.12](https://yunqing-img.oss-cn-beijing.aliyuncs.com/hexo/article/202303/%E6%88%AA%E5%B1%8F2022-09-29%2021.17.12.png)
+
+![截屏2022-09-29 21.21.17](https://yunqing-img.oss-cn-beijing.aliyuncs.com/hexo/article/202303/%E6%88%AA%E5%B1%8F2022-09-29%2021.21.17.png)
+
+![截屏2022-09-29 22.08.32](https://yunqing-img.oss-cn-beijing.aliyuncs.com/hexo/article/202303/%E6%88%AA%E5%B1%8F2022-09-29%2022.08.32.png)
+
+![截屏2022-09-29 22.09.56](https://yunqing-img.oss-cn-beijing.aliyuncs.com/hexo/article/202303/%E6%88%AA%E5%B1%8F2022-09-29%2022.09.56.png)
+
+![截屏2022-09-29 22.11.24](https://yunqing-img.oss-cn-beijing.aliyuncs.com/hexo/article/202303/%E6%88%AA%E5%B1%8F2022-09-29%2022.11.24.png)

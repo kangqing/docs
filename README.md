@@ -1,57 +1,86 @@
-# 首页
+<!-- docs/_sidebar.md -->
 
-## 面试必会知识点
+- [面试](interview/README)
 
+    - [指南](thread/guide)
+    - [项目](interview/project)
+    - [api接口参数签名](interview/API%20%E6%8E%A5%E5%8F%A3%E5%8F%82%E6%95%B0%E7%AD%BE%E5%90%8D.md)
+    - [Arthas 阿尔萨斯使用](interview/Arthas.md)
+    - [JVM](interview/jvm)
+    - [多线程](interview/thread)
+    - [集合](interview/collection)
+    - [IO](interview/inout)
+    - [问题排查](interview/question)
+    - [Spring](interview/spring)
+    - [MySQL](interview/mysql)
+    - [Redis](interview/redis)
+- [多线程](thread/README)
 
-### 介绍项目
+    - [多线程基础](thread/thread1)
+    - [synchronized性能优化](thread/Synchronized同步锁的优化)
+    - [线程安全与共享资源竞争](thread/thread2)
+    - [多线程通信](thread/thread3)
+    - [线程池入门](thread/thread4)
+    - [线程池与锁](thread/thread5)
+    - [线程池与阻塞队列](thread/6-blockingQueue)
+    - [CountDownLatch](thread/CountDownLatch)
+    - [CyclicBarrier](thread/CyclicBarrier)
+    - [CompletableFuture](thread/CompletableFuture)
+- [Spring知识点](spring/README)
 
-- [介绍项目](interview/project)
+    - [Spring Bean](spring/spring1)
+    - [Spring事务](spring/spring2)
+- [分布式知识点](distributed/README)
 
-### Java基础
+    - [缓存相关](distributed/dss1)
+    - [分布式](distributed/dss2)
+- [Redis知识点](redis/README)
 
-- [JVM](interview/jvm)
+    - [基础命令](redis/command)
+    - [Redis有哪些慢操作？](redis/1.%E5%BF%AB%E9%80%9F%E7%9A%84Redis%E6%9C%89%E5%93%AA%E4%BA%9B%E6%85%A2%E6%93%8D%E4%BD%9C.md)
+    - [为什么单线程的Redis那么快？](redis/2.%E9%AB%98%E6%80%A7%E8%83%BD%20IO%20%E6%A8%A1%E5%9E%8B%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8D%95%E7%BA%BF%E7%A8%8B%E7%9A%84%20Redis%20%E8%83%BD%E9%82%A3%E4%B9%88%E5%BF%AB.md)
+    - [宕机了的Redis如何避免数据丢失](redis/3.%20AOF%E6%97%A5%E5%BF%97%EF%BC%9A%E5%AE%95%E6%9C%BA%E4%BA%86Redis%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1.md)
+    - [宕机后Redis如何实现快速恢复](redis/4.内存快照：宕机后Redis如何实现快速恢复)
+    - [主从库如何实现数据一致](redis/5.数据同步，主从库如何实现数据一致)
+    - [主库挂了如何不间断服务](redis/6.哨兵机制：主库挂了如何不间断服务)
+    - [哨兵挂了主库还能切换吗](redis/7.哨兵挂了主从库还能切换吗)
+    - [切片集群，数据增多了该增加内存还是增加实例？](redis/8.切片集群，数据增多了该加内存还是加实例)
+    - [如何在Redis中保存时间序列数据](redis/d.%E5%A6%82%E4%BD%95%E5%9C%A8%20Redis%20%E4%B8%AD%E4%BF%9D%E5%AD%98%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E6%95%B0%E6%8D%AE.md)
+- [RabbitMQ](RabbitMQ/README)
+    - [1.快速入门](RabbitMQ/3.%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.md)
+    - [2.批量发送消费消息](RabbitMQ/4.%20%E6%89%B9%E9%87%8F%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF%2C%E6%89%B9%E9%87%8F%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF.md)
+    - [3.消费重试](RabbitMQ/7.%20%E6%B6%88%E8%B4%B9%E9%87%8D%E8%AF%95.md)
+    - [4.定时消息](RabbitMQ/8.%20%E5%AE%9A%E6%97%B6%E6%B6%88%E6%81%AF.md)
+    - [5.消息模式](RabbitMQ/9.%20%E6%B6%88%E6%81%AF%E6%A8%A1%E5%BC%8F.md)
+    - [6.并发消费](RabbitMQ/10.%20%E5%B9%B6%E5%8F%91%E6%B6%88%E8%B4%B9.md)
+    - [7.顺序消费](RabbitMQ/11.%20%E9%A1%BA%E5%BA%8F%E6%B6%88%E6%81%AF.md)
+    - [8.事务消费](RabbitMQ/12.%20%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF.md)
+    - [9.消费者的消息确认](RabbitMQ/13.%20%E6%B6%88%E8%B4%B9%E8%80%85%E7%9A%84%E6%B6%88%E6%81%AF%E7%A1%AE%E8%AE%A4.md)
+    - [10.生产者的发送确认](RabbitMQ/14.%20%E7%94%9F%E4%BA%A7%E8%80%85%E7%9A%84%E5%8F%91%E9%80%81%E7%A1%AE%E8%AE%A4.md)
+    - [11.RPC的远程调用](RabbitMQ/15.%20RPC%20%E8%BF%9C%E7%A8%8B%E8%B0%83%E7%94%A8.md)
+    - [12.消费异常处理器](RabbitMQ/17.%20%E6%B6%88%E8%B4%B9%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%99%A8.md)
 
-- [多线程](interview/thread)
-- [集合](interview/collection)
-- [IO](interview/inout)
-- [问题排查](interview/question)
-- [Spring](interview/spring)
-- [MySQL](interview/mysql)
-- [Redis](interview/redis)
-
-### 计算机基础
-
-- [操作系统](interview/os)
-- [网络](interview/network)
-
-### 算法
-
-- [排序算法](interview/sort)
-- [LRU算法](interview/lru)
-
-
-
-### 分布式相关
-
-- [CAP&Base理论](interview/cap)
-- [锁](interview/lock)
-- [分布式事务](interview/transactional)
-- [消息队列](interview/rocketmq)
-- [一致性hash](interview/hash)
-- [ID生成方式](interview/newid)
-
-### 微服务
-
-- [注册中心](interview/nacos)
-- [服务降级熔断](interview/hystrix)
-- [api网关](interview/gateway)
-- [配置中心](interview/config)
-
-### 秒杀
-
-- [秒杀](interview/ss)
-
-### 系统设计
-
-
-
+- [k8s](k8s/README)
+    - [1.docker基础](k8s/01Docker%E5%9F%BA%E7%A1%80.md)
+    - [2.镜像仓库 docker hub](k8s/02%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93%EF%BC%9A%E8%AF%A5%E6%80%8E%E6%A0%B7%E7%94%A8%E5%A5%BDDocker%20Hub%E8%BF%99%E4%B8%AA%E5%AE%9D%E8%97%8F.md)
+    - [3.容器如何与外界互联互通](k8s/03%E6%89%93%E7%A0%B4%E6%AC%A1%E5%85%83%E5%A3%81%EF%BC%9A%E5%AE%B9%E5%99%A8%E8%AF%A5%E5%A6%82%E4%BD%95%E4%B8%8E%E5%A4%96%E7%95%8C%E4%BA%92%E8%81%94%E4%BA%92%E9%80%9A.md)
+    - [4.minikube安装与YAML声明](k8s/04minikube%E5%AE%89%E8%A3%85%E4%B8%8EYAML%E5%A3%B0%E6%98%8E.md)
+    - [5.Pod核心概念](k8s/05Pod%20%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5.md)
+    - [6.k8s-configMap和Secrte](k8s/06k8s-configMap%E5%92%8CSecrte.md)
+    - [7.k8s入门实战](k8s/07k8s%E5%85%A5%E9%97%A8%E5%AE%9E%E6%88%98.md)
+    - [8.实际搭建多节点的K8s集群](k8s/08%E5%AE%9E%E9%99%85%E6%90%AD%E5%BB%BA%E5%A4%9A%E8%8A%82%E7%82%B9%E7%9A%84Kubernetes%E9%9B%86%E7%BE%A4.md)
+    - [9.Deployment让应用永不宕机](k8s/09Deployment%EF%BC%9A%E8%AE%A9%E5%BA%94%E7%94%A8%E6%B0%B8%E4%B8%8D%E5%AE%95%E6%9C%BA.md)
+    - [10.Daemonset忠实可靠的看门狗](k8s/10Daemonset%EF%BC%9A%E5%BF%A0%E5%AE%9E%E5%8F%AF%E9%9D%A0%E7%9A%84%E7%9C%8B%E9%97%A8%E7%8B%97.md)
+    - [11.Service微服务架构的应对之道](k8s/11Service%EF%BC%9A%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E7%9A%84%E5%BA%94%E5%AF%B9%E4%B9%8B%E9%81%93.md)
+    - [12.Ingress集群进出流量的总管](k8s/12Ingress%E9%9B%86%E7%BE%A4%E8%BF%9B%E5%87%BA%E6%B5%81%E9%87%8F%E7%9A%84%E6%80%BB%E7%AE%A1.md)
+    - [13.docker-compose单机环境下的容器编排工具](k8s/13docker-compose%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%9A%84%E5%AE%B9%E5%99%A8%E7%BC%96%E6%8E%92%E5%B7%A5%E5%85%B7.md)
+    - [14.PersistentVolume怎么解决数据持久化的难题？](k8s/14PersistentVolume%EF%BC%9A%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E9%9A%BE%E9%A2%98%EF%BC%9F.md)
+    - [15.PersistentVolume + NFS怎么使用网络共享存储](k8s/15%20PersistentVolume%20%2B%20NFS%EF%BC%9A%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8%E7%BD%91%E7%BB%9C%E5%85%B1%E4%BA%AB%E5%AD%98%E5%82%A8%EF%BC%9F.md)
+    - [16.StatefulSet怎么管理有状态的应用](k8s/16.StatefulSet%EF%BC%9A%E6%80%8E%E4%B9%88%E7%AE%A1%E7%90%86%E6%9C%89%E7%8A%B6%E6%80%81%E7%9A%84%E5%BA%94%E7%94%A8%EF%BC%9F.md)
+    - [17.滚动更新：如何做到平滑的应用升级降级](k8s/17%20%20%E6%BB%9A%E5%8A%A8%E6%9B%B4%E6%96%B0%EF%BC%9A%E5%A6%82%E4%BD%95%E5%81%9A%E5%88%B0%E5%B9%B3%E6%BB%91%E7%9A%84%E5%BA%94%E7%94%A8%E5%8D%87%E7%BA%A7%E9%99%8D%E7%BA%A7%EF%BC%9F.md)
+    - [18.应用保障：如何让Pod运行的更健康](k8s/18%20%E5%BA%94%E7%94%A8%E4%BF%9D%E9%9A%9C%EF%BC%9A%E5%A6%82%E4%BD%95%E8%AE%A9Pod%E8%BF%90%E8%A1%8C%E5%BE%97%E6%9B%B4%E5%81%A5%E5%BA%B7%EF%BC%9F.md)
+    - [19.集群管理：如何用名字空间分隔系统资源](k8s/19%EF%BD%9C%E9%9B%86%E7%BE%A4%E7%AE%A1%E7%90%86%EF%BC%9A%E5%A6%82%E4%BD%95%E7%94%A8%E5%90%8D%E5%AD%97%E7%A9%BA%E9%97%B4%E5%88%86%E9%9A%94%E7%B3%BB%E7%BB%9F%E8%B5%84%E6%BA%90%EF%BC%9F.md)
+    - [20.系统监控：如何使用Metrics Server和Prometheus](k8s/20%EF%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%91%E6%8E%A7%EF%BC%9A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Metrics%20Server%E5%92%8CPrometheus%EF%BC%9F.md)
+    - [21.网络通信：CNI是怎么回事？又是怎么工作的？](k8s/21%EF%BD%9C%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%EF%BC%9ACNI%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B%EF%BC%9F%E5%8F%88%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84%EF%BC%9F.md)
+    - [22.实战演练：玩转K8s](k8s/22%EF%BD%9C%E5%AE%9E%E6%88%98%E6%BC%94%E7%BB%83%EF%BC%9A%E7%8E%A9%E8%BD%ACKubernetes%EF%BC%883%EF%BC%89.md)
+    - [23.创建本地k8s镜像](k8s/%E5%88%9B%E5%BB%BA%E6%9C%AC%E5%9C%B0k8s%E9%95%9C%E5%83%8F.md)

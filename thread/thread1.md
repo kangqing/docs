@@ -1,3 +1,84 @@
+# Java中锁的分类
+1. 可重入锁、非可重入锁：几乎所有都是可重入锁
+2. 共享锁、互斥锁：synchronized/ReentrantLock是互斥锁，ReentrantReadWriteLock可以是互斥锁，也可以读读共享锁；
+3. 乐观锁、悲观锁：CAS针对CPU的操作是乐观锁，其余是悲观锁
+4. 公平锁、非公共锁: synchronized 是非公平锁，ReentrantLock和ReentrantReadWriteLock可以自定义
+
+# ThreadLocal 内存泄露问题
+1. 真正存储数据的地方是 Thread 类内部的一个类叫做 ThreadLocalMap
+2. ThreadLocalMap 类内部是基于 Entry[] 数组实现的，其继承了一个弱引用 `class Entry extends WeakReference<ThreadLocal<?>> {}`,解决了 key 的内存泄露问题，只要外部没有针对 key 的强引用，其本身是弱引用，会被 GC 回收；
+3. 这样的话，一个线程可以绑定多个 ThreadLocal对象 作为 key, 存储的多个数据放到 Entry[]中；
+4. 如果ThreadLocal 引用丢失，key 会因为是弱引用被垃圾回收，如果线程还没有被回收（即线程池）,就会导致value的内存泄露问题，内存中的 value 无法被回收，因为 key 是  null,同样也无法被获取到；
+5. 只需要在使用完毕 ThreadLocal 之后，调用 remove 方法即可移除 Entry; get() / set() / remove() 都可以移除 key 为 null 的 Entry;
+
+# 什么是 CAS
+compare and swap 比较交换，是一条CPU 并发源语
+
+它在替换内存中的值时，首先查看内存中的值与预期的值是否一致，如果一致，执行替换操作，这是一个原子性的操作；
+
+## 经典 CAS 执行过程中的 ABA 问题
+线程 1 修改主内存的值为 A
+线程 2 修改主内存的值为 B
+线程 3 修改主内存的值为 A
+这时候进行 CAS 比较，内存中的值仍然是 A 但是，已经修改过了，不能保障原子性，可以追加版本号解决
+
+java提供 AtomicStampedReference类，在进行 CAS 时，不仅会判断原值，还会比较版本信息。
+
+# 并发编程的三大特性
+1. 原子性 加锁
+2. 可见性 volatile 保障CPU内存读取数据强制读主内存
+3. 有序性 volatile 防止JIT即时编译的排序优化和CPU执行的指令重排，happen-before机制
+
+# sleep()和wait()区别
+1. sleep() 是 Thread 类的静态方法，wait() 是Object 类中的方法；
+2. sleep() 一般用来线程休眠，期间不释放锁，wait() 用于线程等待，会释放当前持有锁；
+3. sleep() 不需要唤醒，wait()需要notify() 或者 notifyAll() 唤醒；
+4. sleep() 可以在无锁中执行，wait()必须在持有锁时才能执行；
+5. 重点： wait() 方法会将持有锁的线程从 owner 放到 waitSet 集合中，这个操作是在修改 ObjectMonitor 对象，如果没有持有synchronized锁，是无法操作ObjectMonitor对象的，会抛异常。
+
+# Java 停止线程的方式
+## 1.Thread.stop();(暴力停止，不推荐)
+## 2.设置全局标志位
+## 3.interrupt
+```java
+/**
+ * 最后总结，关于这三个方法，
+ * interrupt（）是给线程设置中断标志；
+ * interrupted（）是检测中断并清除中断状态；(仅作用于当前线程)
+ * isInterrupted（）只检测中断。
+ * 还有重要的一点就是interrupted（）作用于当前线程，interrupt（）和isInterrupted（）作用于此线程，即代码中调用此方法的实例所代表的线程。
+ * interrupt 中断信号 默认值是 false
+ * @author kangqing
+ * @since 2021/1/20 21:57
+ */
+public class InterruptDemo {
+    @SneakyThrows
+    public static void main(String[] args) {
+
+        System.out.println("主线程验证中断标记位 = " + Thread.currentThread().isInterrupted());
+        // 设置为 true
+        Thread.currentThread().interrupt();
+        System.out.println("主线程验证中断标记位 = " + Thread.currentThread().isInterrupted());
+        // 注意直接使用 Thread 调用，因为仅仅作用于当前线程
+        // 注意此方法输出当前中断标记位状态之后，会恢复中断标记位为 false
+        System.out.println("检测并清除中断标记位，仅作用于当前线程，标记位 = " + Thread.interrupted());
+        System.out.println("主线程验证中断标记位 = " + Thread.currentThread().isInterrupted());
+
+        Thread thread = new Thread(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                System.out.println("------");
+            }
+            System.out.println("thread线程结束");
+        });
+        thread.start();
+
+        TimeUnit.MILLISECONDS.sleep(1);
+        thread.interrupt();
+
+    }
+
+}
+```
 # Java抢占式多线程
 Java 的多线程是抢占式的，这表明调度机制会周期性的中断线程，将上线文切换到另一个线程，从而为每个线程都提供 CPU 时间分片，使每个线程都会分配到合理的时间执行任务。需要注意的是，执行 `start()` 方法的顺序不代表线程启动的顺序，为什么出现这样的结果？主要是因为任务的执行靠 CPU 而处理器则采用分片轮询的方式执行任务，所有的任务都是<font color='red'>抢占式执行</font>的，也就是说任务是不排序的。可以设置任务的优先级，优先级高的任务<font color='red'>可能会优先执行(多数时候是无效的)。</font>任务被执行前，该线程处于自旋等待状态。
 
@@ -202,5 +283,6 @@ Deamon 线程与用户线程的区别就是，当所有的用户线程结束时�
 2. 在守护线程中创建的新线程也是守护线程
 3. 守护线程应该永远不去访问固有资源，如文件、数据库，因为他会在任何时候甚至在一个操作的中间发生中断。
 4. 守护线程通常都是用 `while(true)` 的死循环来持续执行任务。
+
 
 
