@@ -30,6 +30,9 @@
 
     - [Spring Bean](spring/spring1)
     - [Spring事务](spring/spring2)
+- [Vue入门](vue/README)
+
+    - [Vue入门知识点](vue/Vue%20快速入门.md)
 - [分布式知识点](distributed/README)
 
     - [缓存相关](distributed/dss1)

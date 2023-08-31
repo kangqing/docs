@@ -4,6 +4,7 @@ brew install minikube
 brew install kubernetes-cli
 # 1.24+ 版本的一个重大变化是从 kubelet 中移除了 dockershim，因此将 container runtime 从 docker 切换至 containerd
 minikube start --driver=docker --container-runtime=containerd --image-mirror-country=cn
+
 ```
 
 ### 番外篇：什么是 containerd ？？？
