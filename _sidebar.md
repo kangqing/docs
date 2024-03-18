@@ -30,6 +30,13 @@
 
     - [Spring Bean](spring/spring1)
     - [Spring事务](spring/spring2)
+    - [Spring初始化Bean](spring/Spring类学习.md)
+- [dubbo相关](dubbo/README.md)
+
+    - [dubbo原理](dubbo/dubbo原理解析.md)
+- [docker](docker/README.md)
+
+    - [docker工具](docker/Portainer.io使用.md)
 - [Vue入门](vue/README)
 
     - [Vue入门知识点](vue/Vue%20快速入门.md)
